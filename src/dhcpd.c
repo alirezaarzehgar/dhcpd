@@ -18,7 +18,7 @@ getReplyDependencies (pktDhcpPacket_t
                       *discovery)
 {
   /**
-   * TODO a function for getting ip from pool and pass to listener 
+   * # TODO a function for getting ip from pool and pass to listener 
    * ```
    * char *clientIpAddress = dhcpLeaseGetIpFromPool(discovery, 1);
    * ``` 
@@ -27,7 +27,7 @@ getReplyDependencies (pktDhcpPacket_t
 
 
   /**
-   * TODO get configured fields from pool configs on a config struct that contain all options
+   * # TODO get configured fields from pool configs on a config struct that contain all options
    * 
    * ```
    * dhcpConfigInfo_t info = dhcpLeaseGetConfigForPool(1);
