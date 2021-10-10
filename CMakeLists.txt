@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.6)
 set(PROJECT_NAME dhcpd)
 set(DHCP_NETWORK dhcp-network)
 
+project(${PROJECT_NAME})
+
 find_package(Git QUIET)
 
 message("\n--------------------------------\n")
