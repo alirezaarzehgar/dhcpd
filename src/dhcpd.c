@@ -11,6 +11,8 @@
 
 #include "dhcpd/dhcpd.h"
 
+#include "network/listener.h"
+
 int
 main (int argc, char const *argv[])
 {
