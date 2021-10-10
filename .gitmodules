@@ -1,0 +1,3 @@
+[submodule "dhcp-network"]
+	path = dhcp-network
+	url = https://github.com/alirezaarzehgar/dhcp-network.git
