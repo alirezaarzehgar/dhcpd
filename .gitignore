@@ -53,3 +53,9 @@ dkms.conf
 
 # astyle
 *.orig
+
+# Build
+build
+
+# editor config
+.vscode
