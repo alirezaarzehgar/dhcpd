@@ -15,7 +15,7 @@
 
 dhcpNetworkPktInfo_t
 getReplyDependencies (pktDhcpPacket_t
-                              *discovery)
+                      *discovery)
 {
   dhcpNetworkPktInfo_t info =
   {
@@ -63,7 +63,7 @@ main (int argc, char const *argv[])
   port = 67;
 
   retval = dhcpNetworkListener (address, port, getReplyDependencies,
-                                getReplyDependencies, ackHandler);
+                                ackHandler);
 
   if (retval == EXIT_FAILURE)
     perror ("dhcpNetworkListener");
