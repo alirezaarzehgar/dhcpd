@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.6)
 
 set(PROJECT_NAME dhcpd)
 set(DHCP_NETWORK dhcp-network)
-set(HEADERS_DIR include/dhcpd)
 
 project(${PROJECT_NAME})
 
@@ -58,6 +57,7 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
     lib::dhcpnetwork
     lib::pkt
+    lib::lease
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -65,3 +65,4 @@ target_include_directories(${PROJECT_NAME}
 )
 
 add_subdirectory(${DHCP_NETWORK})
+add_subdirectory(${DHCP_LEASE})
