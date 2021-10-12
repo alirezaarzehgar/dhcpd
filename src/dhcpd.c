@@ -16,19 +16,20 @@
 
 dhcpNetworkPktInfo_t
 getReplyDependencies (pktDhcpPacket_t
-                      *discovery)
+                      *pkt, char *serverIdentifier)
 {
-  char *serverIdentifier = "192.168.133.30";
-
   dhcpLeaseInit (DHCP_DATABASE_PATH);
 
-  dhcpLeasePoolResult_t lease = dhcpLeaseGetIpFromPool();
+  dhcpLeasePoolResult_t lease = dhcpLeaseGetIpFromPool (pktMacHex2str (
+                                  pkt->chaddr));
 
   dhcpLeaseClose();
 
   char *clientIp = malloc (DHCP_LEASE_IP_STR_LEN);
 
-  unsigned int leaseTime = lease.config.lease_time;
+  unsigned int time = lease.config.lease_time;
+
+  void *leaseTime = &time;
 
   char *netmask = malloc (DHCP_LEASE_SUBNET_STR_LEN);
 
@@ -54,15 +55,13 @@ getReplyDependencies (pktDhcpPacket_t
     .options =
     {
       {.func = (pktGenCallbackFunc_t)pktGenOptDhcpServerIdentifier, .param = serverIdentifier},
-      {.func = (pktGenCallbackFunc_t)pktGenOptIpAddrLeaseTime, .param = (void *) leaseTime},
+      {.func = (pktGenCallbackFunc_t)pktGenOptIpAddrLeaseTime, .param = leaseTime},
       {.func = (pktGenCallbackFunc_t)pktGenOptSubnetMask, .param = netmask},
       {.func = (pktGenCallbackFunc_t)pktGenOptRouter, .param = router},
       {.func = (pktGenCallbackFunc_t)pktGenOptDomainName, .param = domain},
       PKT_GEN_CALLBACK_NULL,
     }
   };
-
-  (void *)discovery;      /* Quit unused warning */
 
   return info;
 }
@@ -72,15 +71,13 @@ ackHandler (pktDhcpPacket_t *pkt)
 {
   int retval;
 
-  dhcpLeaseInit (DHCP_DATABASE_PATH);
-
-  dhcpLeasePoolResult_t lease = dhcpLeaseGetIpFromPool();
-
   char mac[DHCP_LEASE_MAC_STR_MAX_LEN + 2];
 
-  char host[DHCP_LEASE_HOSTNAME_STR_MAX_LEN];
-
   memcpy (mac, pktMacHex2str (pkt->chaddr), DHCP_LEASE_MAC_STR_MAX_LEN + 2);
+
+  dhcpLeaseInit (DHCP_DATABASE_PATH);
+
+  dhcpLeasePoolResult_t lease = dhcpLeaseGetIpFromPool (mac);
 
   retval = dhcpLeaseIpAddress (lease.id, mac, pktGetHostName (pkt));
 
