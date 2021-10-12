@@ -70,6 +70,8 @@ getReplyDependencies (pktDhcpPacket_t
 char *
 ackHandler (pktDhcpPacket_t *pkt)
 {
+  int retval;
+
   dhcpLeaseInit (DHCP_DATABASE_PATH);
 
   dhcpLeasePoolResult_t lease = dhcpLeaseGetIpFromPool();
@@ -85,9 +87,12 @@ ackHandler (pktDhcpPacket_t *pkt)
   memcpy (host, hostnameFromPkt != NULL ? hostnameFromPkt : "unknow-host",
           DHCP_LEASE_HOSTNAME_STR_MAX_LEN);
 
-  dhcpLeaseIpAddress (lease.id, mac, host);
+  retval = dhcpLeaseIpAddress (lease.id, mac, host);
 
   dhcpLeaseClose();
+
+  if (!retval)
+    return "Fuck you!";
 
   return NULL;
 }
