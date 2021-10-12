@@ -1,1 +1,1 @@
-#define DHCP_DATABASE_DIR                       "/var/lib/dhcp"
+#define DHCP_DATABASE_DIR                       "dhcp-lease/tests/databases/dhcpd.db"
