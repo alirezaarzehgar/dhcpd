@@ -86,6 +86,8 @@ ackHandler (pktDhcpPacket_t *pkt)
 
   dhcpLeaseClose();
 
+  printf("lease!\n");
+
   return NULL;
 }
 
