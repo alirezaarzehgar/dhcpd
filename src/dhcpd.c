@@ -10,51 +10,52 @@
  */
 
 #include "dhcpd/dhcpd.h"
-
 #include "network/listener.h"
+#include "dhcpd/config.h"
+#include "lease/lease.h"
 
 dhcpNetworkPktInfo_t
 getReplyDependencies (pktDhcpPacket_t
                       *discovery)
 {
-  /**
-   * # TODO a function for getting ip from pool and pass to listener 
-   * ```
-   * char *clientIpAddress = dhcpLeaseGetIpFromPool(discovery, 1);
-   * ``` 
-   */
-  char *clientIpAddress = TEST_FAKE_DATA_DHCP_NETWORK_YOUR_IP_ADDRESS;
+  char *serverIdentifier = "192.168.133.30";
 
+  dhcpLeaseInit (DHCP_DATABASE_PATH);
 
-  /**
-   * # TODO get configured fields from pool configs on a config struct that contain all options
-   * 
-   * ```
-   * dhcpConfigInfo_t info = dhcpLeaseGetConfigForPool(1);
-   * ```
-   */
-  char *serverIdentifier = TEST_FAKE_DATA_DHCP_NETWORK_SERVER_IDENTIFIER;
+  dhcpLeasePoolResult_t lease = dhcpLeaseGetIpFromPool();
 
-  int leaseTime = TEST_FAKE_DATA_DHCP_NETWORK_IP_ADDRESS_LEASE_TIME;
+  dhcpLeaseClose();
 
-  char *subnet = TEST_FAKE_DATA_DHCP_NETWORK_SUBNET_MASK;
+  char *clientIp = malloc (DHCP_LEASE_IP_STR_LEN);
 
-  char *router = TEST_FAKE_DATA_DHCP_NETWORK_ROUTER;
+  unsigned int leaseTime = lease.config.lease_time;
 
-  char *domain = TEST_FAKE_DATA_DHCP_NETWORK_DOMAIN_NAME;
+  char *netmask = malloc (DHCP_LEASE_SUBNET_STR_LEN);
+
+  char *router = malloc (DHCP_LEASE_IP_STR_LEN);
+
+  char *domain = malloc (DHCP_LEASE_DOMAIN_STR_MAX_LEN);
+
+  strncpy (clientIp, lease.ip, DHCP_LEASE_IP_STR_LEN);
+
+  strncpy (netmask, lease.config.mask, DHCP_LEASE_SUBNET_STR_LEN);
+
+  strncpy (router, lease.config.router, DHCP_LEASE_IP_STR_LEN);
+
+  strncpy (domain, lease.config.domain, DHCP_LEASE_DOMAIN_STR_MAX_LEN);
 
   dhcpNetworkPktInfo_t info =
   {
     .fields = {
-      {.func = (pktGenCallbackFunc_t)pktGenFieldYourIpAddress, .param = clientIpAddress},
+      {.func = (pktGenCallbackFunc_t)pktGenFieldYourIpAddress, .param = clientIp},
       PKT_GEN_CALLBACK_NULL,
     },
 
     .options =
     {
       {.func = (pktGenCallbackFunc_t)pktGenOptDhcpServerIdentifier, .param = serverIdentifier},
-      {.func = (pktGenCallbackFunc_t)pktGenOptIpAddrLeaseTime, .param = (void *)leaseTime},
-      {.func = (pktGenCallbackFunc_t)pktGenOptSubnetMask, .param = subnet},
+      {.func = (pktGenCallbackFunc_t)pktGenOptIpAddrLeaseTime, .param = (void *) leaseTime},
+      {.func = (pktGenCallbackFunc_t)pktGenOptSubnetMask, .param = netmask},
       {.func = (pktGenCallbackFunc_t)pktGenOptRouter, .param = router},
       {.func = (pktGenCallbackFunc_t)pktGenOptDomainName, .param = domain},
       PKT_GEN_CALLBACK_NULL,
@@ -69,7 +70,22 @@ getReplyDependencies (pktDhcpPacket_t
 char *
 ackHandler (pktDhcpPacket_t *pkt)
 {
-  printf ("lease!\n");
+  dhcpLeaseInit (DHCP_DATABASE_PATH);
+
+  dhcpLeasePoolResult_t lease = dhcpLeaseGetIpFromPool();
+
+  char mac[DHCP_LEASE_MAC_STR_MAX_LEN];
+
+  char host[DHCP_LEASE_HOSTNAME_STR_MAX_LEN];
+
+  strncpy (mac, pktMacHex2str (pkt->chaddr), DHCP_LEASE_HOSTNAME_STR_MAX_LEN);
+
+  strncpy (host, pktGetHostName (pkt), DHCP_LEASE_HOSTNAME_STR_MAX_LEN);
+
+  dhcpLeaseIpAddress (lease.id, mac, host);
+
+  dhcpLeaseClose();
+
   return NULL;
 }
 
