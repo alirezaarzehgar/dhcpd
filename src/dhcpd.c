@@ -74,19 +74,20 @@ ackHandler (pktDhcpPacket_t *pkt)
 
   dhcpLeasePoolResult_t lease = dhcpLeaseGetIpFromPool();
 
-  char mac[DHCP_LEASE_MAC_STR_MAX_LEN];
+  char mac[DHCP_LEASE_MAC_STR_MAX_LEN + 2];
 
   char host[DHCP_LEASE_HOSTNAME_STR_MAX_LEN];
 
-  strncpy (mac, pktMacHex2str (pkt->chaddr), DHCP_LEASE_HOSTNAME_STR_MAX_LEN);
+  char *hostnameFromPkt = pktGetHostName (pkt);
 
-  strncpy (host, pktGetHostName (pkt), DHCP_LEASE_HOSTNAME_STR_MAX_LEN);
+  memcpy (mac, pktMacHex2str (pkt->chaddr), DHCP_LEASE_MAC_STR_MAX_LEN + 2);
+
+  memcpy (host, hostnameFromPkt != NULL ? hostnameFromPkt : "unknow-host",
+          DHCP_LEASE_HOSTNAME_STR_MAX_LEN);
 
   dhcpLeaseIpAddress (lease.id, mac, host);
 
   dhcpLeaseClose();
-
-  printf("lease!\n");
 
   return NULL;
 }
