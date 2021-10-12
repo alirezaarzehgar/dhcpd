@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.6)
 set(PROJECT_NAME dhcpd)
 set(DHCP_NETWORK dhcp-network)
 set(HEADERS_DIR include/dhcpd)
+set(DHCP_LEASE dhcp-lease)
 
 project(${PROJECT_NAME})
 
