@@ -80,19 +80,14 @@ ackHandler (pktDhcpPacket_t *pkt)
 
   char host[DHCP_LEASE_HOSTNAME_STR_MAX_LEN];
 
-  char *hostnameFromPkt = pktGetHostName (pkt);
-
   memcpy (mac, pktMacHex2str (pkt->chaddr), DHCP_LEASE_MAC_STR_MAX_LEN + 2);
 
-  memcpy (host, hostnameFromPkt != NULL ? hostnameFromPkt : "unknow-host",
-          DHCP_LEASE_HOSTNAME_STR_MAX_LEN);
-
-  retval = dhcpLeaseIpAddress (lease.id, mac, host);
+  retval = dhcpLeaseIpAddress (lease.id, mac, pktGetHostName (pkt));
 
   dhcpLeaseClose();
 
   if (!retval)
-    return "Fuck you!";
+    return "could not lease ip";
 
   return NULL;
 }
