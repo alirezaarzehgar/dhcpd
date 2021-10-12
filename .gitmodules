@@ -1,3 +1,6 @@
 [submodule "dhcp-network"]
 	path = dhcp-network
 	url = https://github.com/alirezaarzehgar/dhcp-network.git
+[submodule "dhcp-lease"]
+	path = dhcp-lease
+	url = https://github.com/alirezaarzehgar/dhcp-lease.git
