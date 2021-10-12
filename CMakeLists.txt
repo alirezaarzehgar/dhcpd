@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.6)
 
 set(PROJECT_NAME dhcpd)
 set(DHCP_NETWORK dhcp-network)
-set(DHCP_LEASE dhcp-lease)
 
 project(${PROJECT_NAME})
 
@@ -48,6 +47,8 @@ endif()
 if(NOT DHCP_PKT_LIBRARY)
     message("dhcp-pkt library not found")
 endif()
+
+configure_file(config.h.in ../${HEADERS_DIR}/config.h)
 
 add_executable(${PROJECT_NAME}
     src/dhcpd.c
