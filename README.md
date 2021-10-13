@@ -43,7 +43,7 @@ By default your database path sets to `/var/lib/dhcp` localtion.
 For switching to `build/dhcp-lease/tests/databases/dhcpd.db` file you should compile with `DEBUG` flag.
 
 ```
-cmake -DDEBUG ..
+cmake -DDEBUG=ON ..
 ```
 
 Then you can run your server
