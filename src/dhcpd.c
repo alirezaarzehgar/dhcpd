@@ -12,12 +12,15 @@
 #include "dhcpd/dhcpd.h"
 #include "network/listener.h"
 #include "lease/lease.h"
+#include "dhcpd/file.h"
+
+char databasePath[225];
 
 dhcpNetworkPktInfo_t
 getReplyDependencies (pktDhcpPacket_t
                       *pkt, char *serverIdentifier)
 {
-  dhcpLeaseInit (DHCP_DATABASE_PATH);
+  dhcpLeaseInit (databasePath);
 
   dhcpLeasePoolResult_t lease = dhcpLeaseGetIpFromPool (pktMacHex2str (
                                   pkt->chaddr));
@@ -74,7 +77,7 @@ ackHandler (pktDhcpPacket_t *pkt)
 
   memcpy (mac, pktMacHex2str (pkt->chaddr), DHCP_LEASE_MAC_STR_MAX_LEN + 2);
 
-  dhcpLeaseInit (DHCP_DATABASE_PATH);
+  dhcpLeaseInit (databasePath);
 
   dhcpLeasePoolResult_t lease = dhcpLeaseGetIpFromPool (mac);
 
@@ -98,10 +101,18 @@ main (int argc, char const *argv[])
 
   int port;
 
-  /* definition */
+  /* default values */
   strcpy (address, "192.168.133.30");
 
+  strcpy (databasePath, DHCP_DATABASE_PATH);
+
   port = 67;
+
+  if (!databaseExists (databasePath))
+    {
+      fprintf (stderr, "%s: %s\n", databasePath, strerror (ENOENT));
+      return EXIT_FAILURE;
+    }
 
   retval = dhcpNetworkListener (address, port, getReplyDependencies,
                                 ackHandler);
@@ -109,5 +120,5 @@ main (int argc, char const *argv[])
   if (retval == EXIT_FAILURE)
     perror ("dhcpNetworkListener");
 
-  return 0;
+  return EXIT_SUCCESS;
 }
