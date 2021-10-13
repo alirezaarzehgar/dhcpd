@@ -43,7 +43,7 @@ if(TARGET DHCP_LEASE)
     message("dhcp-lease library not found")
 endif()
 
-configure_file(config.h.in ../${HEADERS_DIR}/config.h)
+configure_file(config.h.in ${CMAKE_SOURCE_DIR}/${HEADERS_DIR}/config.h)
 
 add_executable(${PROJECT_NAME}
     src/dhcpd.c
