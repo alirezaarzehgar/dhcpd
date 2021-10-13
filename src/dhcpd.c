@@ -13,6 +13,7 @@
 #include "network/listener.h"
 #include "lease/lease.h"
 #include "dhcpd/file.h"
+#include "dhcpd/pid.h"
 #include <getopt.h>
 
 static char databasePath[MAX_DATABASE_PATH_LEN];
@@ -161,6 +162,7 @@ main (int argc, char const *argv[])
       return EXIT_FAILURE;
     }
 
+  saveCurrentPid((char*)argv[0]);
 
   retval = dhcpNetworkListener (address, port, getReplyDependencies,
                                 ackHandler);
