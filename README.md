@@ -15,6 +15,20 @@
  - save pidfile on `/run/dhcpd.pid`
  - daemon support
 
+### arguments
+
+```
+    --database      -f  path of lease database
+
+    --address       -a  server ip
+
+    --port          -p  dhcp server port (default to 67)
+
+    --foreground    -d don't daemonize
+
+    --background    -b  daemonize
+```
+
 # Build and run
 
 First of all you should install `dhcp-lease` dependencies
