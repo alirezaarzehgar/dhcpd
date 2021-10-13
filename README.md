@@ -36,14 +36,24 @@ cmake --build .
 Now you have a fake pool and config database on `build/dhcp-lease/tests/databases/dhcpd.db`
 path that your program use it.
 
-You can copy `dhcpd.db` to `/var/lib/dhcp` and change <a href="https://github.com/alirezaarzehgar/dhcpd/blob/06882725d075de465b113ee2535e01f508f098d1/config.h.in#L1">this</a> line.
+You can copy `dhcpd.db` to `/var/lib/dhcp`.
 
-```c
-#define DHCP_DATABASE_PATH                       "dhcp-lease/tests/databases/dhcpd.db"
+By default your database path sets to `/var/lib/dhcp` localtion.
+
+For switching to `build/dhcp-lease/tests/databases/dhcpd.db` file you should compile with `DEBUG` flag.
+
+```
+cmake -DDEBUG ..
 ```
 
 Then you can run your server
 
 ```
 # ./dhcpd
+```
+
+After building project you can install project using this command :
+
+```
+# make install
 ```
