@@ -10,6 +10,7 @@
  */
 
 #include "dhcpd/pid.h"
+#include <libgen.h>
 
 bool
 saveCurrentPid (char *filename)
@@ -20,7 +21,7 @@ saveCurrentPid (char *filename)
 
   FILE *pidFile;
 
-  sprintf (path, DHCPD_RUNTIME_DIR "%s.pid", filename);
+  sprintf (path, DHCPD_RUNTIME_DIR "%s.pid", basename(filename));
 
   pidFile = fopen (path, "w");
 
