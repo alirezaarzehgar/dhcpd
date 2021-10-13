@@ -20,7 +20,8 @@ static char databasePath[MAX_DATABASE_PATH_LEN];
 static struct option long_options[] =
 {
   {"database", required_argument, NULL, 'f'},
-  {"address", required_argument, NULL, 'a'}
+  {"address", required_argument, NULL, 'a'},
+  {"port", required_argument, NULL, 'p'},
 };
 
 dhcpNetworkPktInfo_t
@@ -122,7 +123,7 @@ main (int argc, char const *argv[])
 
   port = 67;
 
-  while ((opt = getopt_long (argc, (char *const *) argv, "f:a:", long_options,
+  while ((opt = getopt_long (argc, (char *const *) argv, "f:a:p:", long_options,
                              &index_opt)) != -1)
     {
       switch (opt)
@@ -135,6 +136,13 @@ main (int argc, char const *argv[])
           /* TODO Address validation */
           if (true)
             strncpy (address, optarg, DHCP_LEASE_IP_STR_LEN + 1);
+
+          break;
+
+        case 'p':
+          /* TODO Port validation*/
+          if (true)
+            port = atoi (optarg);
 
           break;
         }
