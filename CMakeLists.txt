@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.6)
 
 set(PROJECT_NAME dhcpd)
 set(DHCP_NETWORK dhcp-network)
-set(HEADERS_DIR include/dhcpd)
 set(DHCP_LEASE dhcp-lease)
+set(HEADERS_DIR include/dhcpd)
 
 project(${PROJECT_NAME})
 
@@ -34,20 +34,13 @@ if(GIT_FOUND AND EXISTS "../.git")
     endif()    
 endif()
 
-find_library(DHCP_NETWORK_LIBRARY NAMES
-    lib::dhcpnetwork
-)
 
-find_library(DHCP_PKT_LIBRARY NAMES
-    lib::pkt
-)
-
-if(NOT DHCP_NETWORK_LIBRARY)
+if(TARGET DHCP_NETWORK)
     message("dhcp-network library not found")
 endif()
 
-if(NOT DHCP_PKT_LIBRARY)
-    message("dhcp-pkt library not found")
+if(TARGET DHCP_LEASE)
+    message("dhcp-lease library not found")
 endif()
 
 configure_file(config.h.in ../${HEADERS_DIR}/config.h)
