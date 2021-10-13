@@ -10,6 +10,11 @@
  - sqlite3 (for lease module)
  - python3 (for lease module)
 
+### features
+ - sqlite3 database used for lease system
+ - save pidfile on `/run/dhcpd.pid`
+ - daemon support
+
 # Build and run
 
 First of all you should install `dhcp-lease` dependencies
@@ -49,7 +54,7 @@ cmake -DDEBUG ..
 Then you can run your server
 
 ```
-# ./dhcpd
+# ./dhcpd -f /path/dhcpd.db -a 192.168.133.30
 ```
 
 After building project you can install project using this command :
