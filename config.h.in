@@ -1,1 +1,0 @@
-#define DHCP_DATABASE_PATH                       "dhcp-lease/tests/databases/dhcpd.db"

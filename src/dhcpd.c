@@ -11,7 +11,6 @@
 
 #include "dhcpd/dhcpd.h"
 #include "network/listener.h"
-#include "dhcpd/config.h"
 #include "lease/lease.h"
 
 dhcpNetworkPktInfo_t
