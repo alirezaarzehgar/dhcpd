@@ -13,8 +13,15 @@
 #include "network/listener.h"
 #include "lease/lease.h"
 #include "dhcpd/file.h"
+#include <getopt.h>
 
-char databasePath[225];
+static char databasePath[MAX_DATABASE_PATH_LEN];
+
+static struct option long_options[] =
+{
+  {"database", required_argument, NULL, 'f'},
+  {"address", required_argument, NULL, 'a'}
+};
 
 dhcpNetworkPktInfo_t
 getReplyDependencies (pktDhcpPacket_t
@@ -77,7 +84,10 @@ ackHandler (pktDhcpPacket_t *pkt)
 
   memcpy (mac, pktMacHex2str (pkt->chaddr), DHCP_LEASE_MAC_STR_MAX_LEN + 2);
 
-  dhcpLeaseInit (databasePath);
+  retval = dhcpLeaseInit (databasePath);
+
+  if (!retval)
+    return "could not lease ip";
 
   dhcpLeasePoolResult_t lease = dhcpLeaseGetIpFromPool (mac);
 
@@ -97,22 +107,52 @@ main (int argc, char const *argv[])
   /* declaration */
   int retval;
 
-  char address[PKT_ADDR_MAX_LEN];
+  char address[DHCP_LEASE_IP_STR_LEN + 1];
 
   int port;
 
+  int opt;
+
+  int index_opt;
+
   /* default values */
-  strcpy (address, "192.168.133.30");
+  bzero (&address, sizeof (address));
 
   strcpy (databasePath, DHCP_DATABASE_PATH);
 
   port = 67;
+
+  while ((opt = getopt_long (argc, (char *const *) argv, "f:a:", long_options,
+                             &index_opt)) != -1)
+    {
+      switch (opt)
+        {
+        case 'f':
+          strncpy (databasePath, optarg, MAX_DATABASE_PATH_LEN);
+          break;
+
+        case 'a':
+          /* TODO Address validation */
+          if (true)
+            strncpy (address, optarg, DHCP_LEASE_IP_STR_LEN + 1);
+
+          break;
+        }
+    }
 
   if (!databaseExists (databasePath))
     {
       fprintf (stderr, "%s: %s\n", databasePath, strerror (ENOENT));
       return EXIT_FAILURE;
     }
+
+  /* TODO need to better validation */
+  if (address[0] == '\0')
+    {
+      fprintf (stderr, "address argument is required\n");
+      return EXIT_FAILURE;
+    }
+
 
   retval = dhcpNetworkListener (address, port, getReplyDependencies,
                                 ackHandler);

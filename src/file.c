@@ -16,5 +16,5 @@
 bool
 databaseExists (char *path)
 {
-  return access (path, F_OK) == 0;
+  return access (path, F_OK) == 0 && access (path, W_OK) == 0;
 }
