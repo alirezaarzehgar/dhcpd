@@ -13,4 +13,6 @@
 #define TEST_FAKE_DATA_DHCP_NETWORK_ROUTER                   "192.168.133.1"
 #define TEST_FAKE_DATA_DHCP_NETWORK_DOMAIN_NAME              "alireza.zharfpouyan.net"
 
+#define MAX_DATABASE_PATH_LEN 225
+
 #endif // DHCPD_H
