@@ -23,6 +23,8 @@ static struct option long_options[] =
   {"database", required_argument, NULL, 'f'},
   {"address", required_argument, NULL, 'a'},
   {"port", required_argument, NULL, 'p'},
+  {"foreground", required_argument, NULL, 'd'},
+  {"background", required_argument, NULL, 'b'},
 };
 
 dhcpNetworkPktInfo_t
@@ -117,6 +119,8 @@ main (int argc, char const *argv[])
 
   int index_opt;
 
+  int background = -1;
+
   /* default values */
   bzero (&address, sizeof (address));
 
@@ -124,7 +128,7 @@ main (int argc, char const *argv[])
 
   port = 67;
 
-  while ((opt = getopt_long (argc, (char *const *) argv, "f:a:p:", long_options,
+  while ((opt = getopt_long (argc, (char *const *) argv, "f:a:p:db", long_options,
                              &index_opt)) != -1)
     {
       switch (opt)
@@ -144,7 +148,16 @@ main (int argc, char const *argv[])
           /* TODO Port validation*/
           if (true)
             port = atoi (optarg);
+          break;
 
+        case 'b':
+          if (background == -1)
+            background = true;
+          break;
+
+        case 'd':
+          if (background == -1)
+            background = false;
           break;
         }
     }
@@ -162,7 +175,10 @@ main (int argc, char const *argv[])
       return EXIT_FAILURE;
     }
 
-  saveCurrentPid((char*)argv[0]);
+  if (background == true)
+    daemon (0, 0);
+
+  saveCurrentPid ((char *)argv[0]);
 
   retval = dhcpNetworkListener (address, port, getReplyDependencies,
                                 ackHandler);
