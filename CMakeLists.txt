@@ -59,6 +59,7 @@ if(TARGET DHCP_LEASE)
 endif()
 
 add_executable(${PROJECT_NAME}
+    src/pid.c
     src/file.c
     src/dhcpd.c
 )
