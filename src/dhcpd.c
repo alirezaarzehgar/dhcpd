@@ -176,7 +176,7 @@ main (int argc, char const *argv[])
     }
 
   if (background == true)
-    daemon (0, 0);
+    daemon (1, 0);
 
   saveCurrentPid ((char *)argv[0]);
 
